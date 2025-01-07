@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { Select } from "select-p14-elodie";
+
 const Form = () => {
 
   const [formData, setFormData] = useState({
@@ -16,6 +18,10 @@ const Form = () => {
     const { id, value } = e.target; 
     setFormData({ ...formData, [id]: value }); 
   };
+
+  const onChangeSelect = (value) => {
+    console.log(value)
+  }
  // Gerer la soumission du formulaire
  const handleSubmit = (e) => {
   e.preventDefault();
@@ -48,6 +54,15 @@ const Form = () => {
           <input type="text" id="city" value={formData.city} onChange={handleChange} />
 
           <label htmlFor="state">State</label>
+          <Select 
+            placeholder="Select State"
+            options={[
+              {id: 'CA', name: 'California'},
+              {id: 'NY', name: 'New York'},
+              {id: 'TX', name: 'Texas'},
+            ]}
+            onChange={onChangeSelect}
+          />
           <select id="state" value={formData.state} onChange={handleChange}>
             <option value="">Select State</option>
             <option value="CA">California</option>
@@ -60,6 +75,14 @@ const Form = () => {
         </fieldset>
 
         <label htmlFor="department">Department</label>
+        <Select 
+            placeholder="Select Department"
+            options={[
+              {id: 'sales', name: 'Sales'},
+              {id: 'marketing', name: 'Marketing'},
+            ]}
+            onChange={onChangeSelect}
+          />
         <select id="department" value={formData.department} onChange={handleChange}>
           <option value="">Select Department</option>
           <option value="sales">Sales</option>
