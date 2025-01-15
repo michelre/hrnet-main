@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Select } from "select-p14-elodie";
+import { EmployeesContext } from "../../context";
 
 const Form = () => {
-
+  const {employees, setEmployees} = useContext(EmployeesContext)
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -24,8 +25,11 @@ const Form = () => {
   }
  // Gerer la soumission du formulaire
  const handleSubmit = (e) => {
-  e.preventDefault();
-  localStorage.setItem("employeeData", JSON.stringify(formData));
+  e.preventDefault();  
+  const employeesData = JSON.parse(localStorage.getItem('employeesData') || '[]')
+  const newEmployeesData = employeesData.concat(formData)
+  setEmployees(newEmployeesData)
+  localStorage.setItem("employeesData", JSON.stringify(newEmployeesData));
   console.log("Form submitted", formData);
 };
 
