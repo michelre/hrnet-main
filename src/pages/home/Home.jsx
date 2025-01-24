@@ -1,12 +1,8 @@
 import { Link } from "react-router-dom";
 import Form from "../../components/form/Form";
-import { useContext } from "react";
-import {EmployeesContext} from "../../context";
 
 
 const Home =( ) => {
-    const {employees, setEmployees} = useContext(EmployeesContext)
-    console.log(employees, setEmployees)
 
     return (
         <div className="container">

@@ -1,12 +1,15 @@
 import { useState, useContext } from "react";
 import { states } from "../../data";
 import { Select } from "select-p14-elodie";
+import { EmployeesContext } from "../../context";
 
 
 
 
 const Form = () => {
   const {employees, setEmployees} = useContext(EmployeesContext)
+  const [selectedState, setSelectedState] = useState(null)
+  const [selectedDepartment, setSelectedDepartment] = useState(null)
 // initialiser du state du formulaire avec des valeurs par défaut
   const [formData, setFormData] = useState({
     firstName: "",
@@ -25,9 +28,11 @@ const Form = () => {
     setFormData({ ...formData, [id]: value }); 
   };
 
-  const onChangeSelect = (value) => {
-    console.log(value)
-  }
+  const handleDepartmentSelect = (department) => {
+    setFormData({ ...formData, department }); //met à jour l'état sélectionné dans formData
+    setSelectedDepartment(department)
+  };
+
  // Gerer la soumission du formulaire
  const handleSubmit = (e) => {
   e.preventDefault();  
@@ -37,8 +42,7 @@ const Form = () => {
   localStorage.setItem("employeesData", JSON.stringify(newEmployeesData));
   console.log("Form submitted", formData);
 };
-
-  const [selectedState, setSelectedState] = useState(null)
+  
  // fonction pour gérer la sélection d'un état dans la liste déroulante
   const handleStateSelect = (state) => {
     setFormData({ ...formData, state }); //met à jour l'état sélectionné dans formData
@@ -82,22 +86,17 @@ const Form = () => {
         </fieldset>
 
         <label htmlFor="department">Department</label>
-        <Select 
-            placeholder="Select Department"
+        <Select             
             options={[
-              {id: 'sales', name: 'Sales'},
-              {id: 'marketing', name: 'Marketing'},
+              {id: 'sales', value: 'Sales'},
+              {id: 'marketing', value: 'Marketing'},
+              {id: 'engineering', value: 'Human Resources'},
+              {id: 'legal', value: 'Legal'},
             ]}
-            onChange={onChangeSelect}
+            onChange={handleDepartmentSelect}
+            defaultValue={selectedDepartment}
+            placeholder="Select Department"
           />
-        <select id="department" value={formData.department} onChange={handleChange}>
-          <option value="">Select Department</option>
-          <option value="sales">Sales</option>
-          <option value="marketing">Marketing</option>
-          <option value="engineering">Engineering</option>
-          <option value="hr">Human Resources</option>
-          <option value="legal">Legal</option>
-        </select>
 
         <button type="submit">Save</button>
       </form>
