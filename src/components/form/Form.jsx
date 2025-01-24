@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { states } from "../../data";
 import { Select } from "select-p14-elodie";
 
@@ -6,6 +6,7 @@ import { Select } from "select-p14-elodie";
 
 
 const Form = () => {
+  const {employees, setEmployees} = useContext(EmployeesContext)
 // initialiser du state du formulaire avec des valeurs par défaut
   const [formData, setFormData] = useState({
     firstName: "",
@@ -23,11 +24,18 @@ const Form = () => {
     const { id, value } = e.target; 
     setFormData({ ...formData, [id]: value }); 
   };
- // fonction pour gérer la soumission du formulaire
+
+  const onChangeSelect = (value) => {
+    console.log(value)
+  }
+ // Gerer la soumission du formulaire
  const handleSubmit = (e) => {
-  e.preventDefault();
-  localStorage.setItem("employeeData", JSON.stringify(formData));// stocke les données dans le localStorage
-  console.log("formulaire envoyé", formData);
+  e.preventDefault();  
+  const employeesData = JSON.parse(localStorage.getItem('employeesData') || '[]')
+  const newEmployeesData = employeesData.concat(formData)
+  setEmployees(newEmployeesData)
+  localStorage.setItem("employeesData", JSON.stringify(newEmployeesData));
+  console.log("Form submitted", formData);
 };
 
   const [selectedState, setSelectedState] = useState(null)
@@ -74,6 +82,14 @@ const Form = () => {
         </fieldset>
 
         <label htmlFor="department">Department</label>
+        <Select 
+            placeholder="Select Department"
+            options={[
+              {id: 'sales', name: 'Sales'},
+              {id: 'marketing', name: 'Marketing'},
+            ]}
+            onChange={onChangeSelect}
+          />
         <select id="department" value={formData.department} onChange={handleChange}>
           <option value="">Select Department</option>
           <option value="sales">Sales</option>
