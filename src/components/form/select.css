@@ -1,0 +1,38 @@
+.custom-select {
+    position: relative;
+    width: 200px;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+  }
+  
+  .select-selected {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .select-items {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    margin-top: 5px;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .select-items li {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+  }
+  
+  .select-items li:hover {
+    background-color: #2f86e2;
+    color: white;
+  }
+  
+  

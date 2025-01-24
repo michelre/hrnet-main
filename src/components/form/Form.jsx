@@ -1,6 +1,8 @@
 import { useState } from "react";
-const Form = () => {
+import './select.css'
 
+const Form = () => {
+// initialiser du state du formulaire avec des valeurs par défaut
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -11,17 +13,26 @@ const Form = () => {
     zipCode: "",
     department: "",
   });
-  // Gerer des changements des inputs
+
+    // fonction pour gérer les changements dans les champs du formulaire
   const handleChange = (e) => {
     const { id, value } = e.target; 
     setFormData({ ...formData, [id]: value }); 
   };
- // Gerer la soumission du formulaire
+ // fonction pour gérer la soumission du formulaire
  const handleSubmit = (e) => {
   e.preventDefault();
-  localStorage.setItem("employeeData", JSON.stringify(formData));
-  console.log("Form submitted", formData);
+  localStorage.setItem("employeeData", JSON.stringify(formData));// stocke les données dans le localStorage
+  console.log("formulaire envoyé", formData);
 };
+
+  // etat pour gérer l'ouverture et fermeture de la liste déroulante personnalisée.
+  const [isStateListOpen, setIsStateListOpen] = useState(false);
+ // fonction pour gérer la sélection d'un état dans la liste déroulante
+  const handleStateSelect = (state) => {
+    setFormData({ ...formData, state }); //met à jour l'état sélectionné dans formData
+    setIsStateListOpen(false); // ferme la liste après la sélection
+  };
 
     return (
       <>
@@ -48,12 +59,19 @@ const Form = () => {
           <input type="text" id="city" value={formData.city} onChange={handleChange} />
 
           <label htmlFor="state">State</label>
-          <select id="state" value={formData.state} onChange={handleChange}>
-            <option value="">Select State</option>
-            <option value="CA">California</option>
-            <option value="NY">New York</option>
-            <option value="TX">Texas</option>
-          </select>
+          <div className="custom-select" onClick={() => setIsStateListOpen(!isStateListOpen)}>
+            
+            <div className="select-selected">
+              {formData.state || "Select State"}
+            </div>
+            {isStateListOpen && (
+              <ul className="select-items">
+                <li onClick={() => handleStateSelect("California")}>California</li>
+                <li onClick={() => handleStateSelect("New York")}>New York</li>
+                <li onClick={() => handleStateSelect("Texas")}>Texas</li>
+              </ul>
+            )}
+          </div>
 
           <label htmlFor="zip-code">Zip Code</label>
           <input type="number" id="zipCode" value={formData.zipCode} onChange={handleChange} />
@@ -68,7 +86,8 @@ const Form = () => {
           <option value="hr">Human Resources</option>
           <option value="legal">Legal</option>
         </select>
-        <button type="submit">Save Employee</button>
+
+        <button type="submit">Save</button>
       </form>
       </>
     );
