@@ -1,5 +1,9 @@
 import { useState } from "react";
-import './select.css'
+import { states } from "../../data";
+import { Select } from "select-p14-elodie";
+
+
+
 
 const Form = () => {
 // initialiser du state du formulaire avec des valeurs par défaut
@@ -26,12 +30,11 @@ const Form = () => {
   console.log("formulaire envoyé", formData);
 };
 
-  // etat pour gérer l'ouverture et fermeture de la liste déroulante personnalisée.
-  const [isStateListOpen, setIsStateListOpen] = useState(false);
+  const [selectedState, setSelectedState] = useState(null)
  // fonction pour gérer la sélection d'un état dans la liste déroulante
   const handleStateSelect = (state) => {
     setFormData({ ...formData, state }); //met à jour l'état sélectionné dans formData
-    setIsStateListOpen(false); // ferme la liste après la sélection
+    setSelectedState(state)
   };
 
     return (
@@ -59,20 +62,13 @@ const Form = () => {
           <input type="text" id="city" value={formData.city} onChange={handleChange} />
 
           <label htmlFor="state">State</label>
-          <div className="custom-select" onClick={() => setIsStateListOpen(!isStateListOpen)}>
-            
-            <div className="select-selected">
-              {formData.state || "Select State"}
-            </div>
-            {isStateListOpen && (
-              <ul className="select-items">
-                <li onClick={() => handleStateSelect("California")}>California</li>
-                <li onClick={() => handleStateSelect("New York")}>New York</li>
-                <li onClick={() => handleStateSelect("Texas")}>Texas</li>
-              </ul>
-            )}
-          </div>
-
+          <Select 
+            options={states}
+            onChange={handleStateSelect}
+            defaultValue={selectedState}
+            placeholder="Select states"
+          />
+          
           <label htmlFor="zip-code">Zip Code</label>
           <input type="number" id="zipCode" value={formData.zipCode} onChange={handleChange} />
         </fieldset>
