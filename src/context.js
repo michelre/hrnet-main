@@ -1,5 +1,9 @@
 import { createContext } from "react";
 
+
+// Création du contexte
 const EmployeesContext = createContext();
 
-export {EmployeesContext}
+// Création du Provider
+
+export { EmployeesContext}
