@@ -13,7 +13,7 @@ const Form = () => {
     department: "",
   });
 
-  // Gestion des changements des input
+  // Gestion des changements des inputs
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -36,10 +36,19 @@ const Form = () => {
           <input type="text" id="last-name" value={formData.lastName} onChange={handleChange}/>
   
           <label htmlFor="date-of-birth">Date of Birth</label>
-          <input id="date-of-birth" type="text" value={formData.dateOfBirth} onChange={handleChange}/>
-  
+          <input
+            type="date"
+            id="dateOfBirth"
+            value={formData.dateOfBirth}
+            onChange={handleChange}
+          />
           <label htmlFor="start-date">Start Date</label>
-          <input id="start-date" type="text" value={formData.startDate} onChange={handleChange}/>
+          <input
+            type="date"
+            id="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
+          />
   
           <fieldset className="address">
             <legend>Address</legend>
