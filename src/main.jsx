@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import Layout from './components/Layout/Layout'
 import Home from './pages/home/Home'
 import './index.css'
+import './context.js'
+
 
 import {
   RouterProvider,
@@ -20,8 +22,9 @@ const router = createBrowserRouter(
     </Route>
   )
 );
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
+createRoot(document.getElementById('root')).render(  
+    <StrictMode>
+        <RouterProvider router={router} />
+    </StrictMode>
 );
+

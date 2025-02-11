@@ -1,6 +1,10 @@
-import { useState } from "react";
-const Form = () => {
+import { useContext, useState } from "react";
+import { EmployeesContext } from "../../context";
+import { useNavigate } from "react-router-dom";
 
+const Form = () => {
+const navigate = useNavigate();
+const {employees, setEmployees} = useContext(EmployeesContext)
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -19,21 +23,28 @@ const Form = () => {
     setFormData({ ...formData, [id]: value });
   }
 
+
   // Gestion du submit du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem("employeeData", JSON.stringify(formData));
-    console.log(formData);
+    const employeesData = JSON.parse(localStorage.getItem('employeesData') || '[]')
+    const newEmployeesData = employeesData.concat(formData)
+
+    setEmployees(newEmployeesData)
+    localStorage.setItem("employeesData", JSON.stringify(newEmployeesData));
+
+    console.log("Formulaire soumit: ", formData)
+    navigate("/employees");
   }
   
     return (
       <>
         <form id="create-employee" onSubmit={handleSubmit}>
           <label htmlFor="first-name">First Name</label>
-          <input type="text" id="firstName" value={formData.firstName} onChange={handleChange} />
+          <input type="text" id="firstName" value={formData.firstName} onChange={handleChange} required />
   
-          <label htmlFor="last-name">Last Name</label>
-          <input type="text" id="last-name" value={formData.lastName} onChange={handleChange}/>
+          <label htmlFor="lastName">Last Name</label>
+          <input type="text" id="lastName" value={formData.lastName} onChange={handleChange} required />
   
           <label htmlFor="date-of-birth">Date of Birth</label>
           <input
@@ -41,6 +52,7 @@ const Form = () => {
             id="dateOfBirth"
             value={formData.dateOfBirth}
             onChange={handleChange}
+            required
           />
           <label htmlFor="start-date">Start Date</label>
           <input
@@ -48,30 +60,33 @@ const Form = () => {
             id="startDate"
             value={formData.startDate}
             onChange={handleChange}
+            required
           />
   
           <fieldset className="address">
             <legend>Address</legend>
   
             <label htmlFor="street">Street</label>
-            <input id="street" type="text" value={formData.street} onChange={handleChange}/>
+            <input id="street" type="text" value={formData.street} onChange={handleChange} required />
   
             <label htmlFor="city">City</label>
-            <input id="city" type="text" value={formData.city} onChange={handleChange}/>
+            <input id="city" type="text" value={formData.city} onChange={handleChange} required />
   
+
             <label htmlFor="state">State</label>
-          <select name="state" id="state" value={formData.state} onChange={handleChange}>
+          <select name="state" id="state" value={formData.state} onChange={handleChange} required>
             <option value="CA">California</option>
             <option value="NY">New York</option>
             <option value="TX">Texas</option>
           </select>
   
-            <label htmlFor="zip-code">Zip Code</label>
-            <input id="zip-code" type="number" value={formData.zipCode} onChange={handleChange}/>
+          <label htmlFor="zipCode">Zip Code</label>
+          <input type="number" id="zipCode" value={formData.zipCode} onChange={handleChange} required />
+
           </fieldset>
   
           <label htmlFor="department">Department</label>
-          <select name="department" id="department" value={formData.department} onChange={handleChange}>
+          <select name="department" id="department" value={formData.department} onChange={handleChange} required>
             <option value="sales">Sales</option>
             <option value="marketing">Marketing</option>
             <option value="engineering">Engineering</option>
