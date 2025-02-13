@@ -1,10 +1,15 @@
 import { useContext, useState } from "react";
 import { EmployeesContext } from "../../context"; 
-import { useNavigate } from "react-router-dom";
+import { Select } from "hrnet-select-p14";
+import { states } from "../../data";
+
 
 const Form = () => {
-  const navigate = useNavigate();
+ 
   const { employees, setEmployees } = useContext(EmployeesContext);
+  const [selectedDepartment, setSelectedDepartment] = useState(null)
+  const [selectedState, setSelectedState] = useState(null)
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -22,6 +27,10 @@ const Form = () => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
+  const handleDepartmentSelect = (department) => {
+    setFormData({ ...formData, department }); //met à jour l'état sélectionné dans formData
+    setSelectedDepartment(department)
+  };
 
   // Gestion du submit du formulaire
   const handleSubmit = (e) => {
@@ -30,13 +39,15 @@ const Form = () => {
 
     setEmployees(newEmployeesData);
     localStorage.setItem("employeesData", JSON.stringify(newEmployeesData)); 
-
-    navigate("/employees");  
+  };
+  const handleStateSelect = (state) => {
+    setFormData({ ...formData, state }); //met à jour l'état sélectionné dans formData
+    setSelectedState(state)
   };
 
   return (
     <form id="create-employee" onSubmit={handleSubmit}>
-      <label htmlFor="first-name">First Name</label>
+      <label htmlFor="firstName">First Name</label>
       <input
         type="text"
         id="firstName"
@@ -54,7 +65,7 @@ const Form = () => {
         required
       />
 
-      <label htmlFor="date-of-birth">Date of Birth</label>
+      <label htmlFor="dateOfBirth">Date of Birth</label>
       <input
         type="date"
         id="dateOfBirth"
@@ -63,7 +74,7 @@ const Form = () => {
         required
       />
 
-      <label htmlFor="start-date">Start Date</label>
+      <label htmlFor="startDate">Start Date</label>
       <input
         type="date"
         id="startDate"
@@ -92,18 +103,14 @@ const Form = () => {
           required
         />
 
-        <label htmlFor="state">State</label>
-        <select
-          name="state"
-          id="state"
-          value={formData.state}
-          onChange={handleChange}
-          required
-        >
-          <option value="CA">California</option>
-          <option value="NY">New York</option>
-          <option value="TX">Texas</option>
-        </select>
+<label htmlFor="state">State</label>
+          <Select 
+            options={states}
+            onChange={handleStateSelect}
+            defaultValue={selectedState}
+            placeholder="Select states"
+          />
+        
 
         <label htmlFor="zipCode">Zip Code</label>
         <input
@@ -116,19 +123,17 @@ const Form = () => {
       </fieldset>
 
       <label htmlFor="department">Department</label>
-      <select
-        name="department"
-        id="department"
-        value={formData.department}
-        onChange={handleChange}
-        required
-      >
-        <option value="sales">Sales</option>
-        <option value="marketing">Marketing</option>
-        <option value="engineering">Engineering</option>
-        <option value="hr">Human Resources</option>
-        <option value="legal">Legal</option>
-      </select>
+        <Select             
+            options={[
+              {id: 'sales', value: 'Sales'},
+              {id: 'marketing', value: 'Marketing'},
+              {id: 'engineering', value: 'Human Resources'},
+              {id: 'legal', value: 'Legal'},
+            ]}
+            onChange={handleDepartmentSelect}
+            defaultValue={selectedDepartment}
+            placeholder="Select Department"
+          />
 
       <button type="submit">Save Employee</button>
     </form>
