@@ -6,6 +6,11 @@ import { states } from "../../data";
 import Modal from "../modal/Modal";
 import { createPortal } from "react-dom";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { fr } from 'date-fns/locale/fr';
+
+
 
 const Form = () => {
  
@@ -66,6 +71,7 @@ const Form = () => {
         id="firstName"
         value={formData.firstName}
         onChange={handleChange}
+        required
       />
 
       <label htmlFor="lastName">Last Name</label>
@@ -74,25 +80,31 @@ const Form = () => {
         id="lastName"
         value={formData.lastName}
         onChange={handleChange}
+        required
         
       />
 
       <label htmlFor="dateOfBirth">Date of Birth</label>
-      <input
-        type="date"
-        id="dateOfBirth"
-        value={formData.dateOfBirth}
-        onChange={handleChange}
-       
+      <DatePicker
+      id="dateOfBirth"
+      selected={formData.dateOfBirth}
+      onSelect={(value) => handleChange({target: {id: 'dateOfBirth', value}})}
+      onChange={(value) => handleChange({target: {id: 'dateOfBirth', value}})}
+      locale={fr}
+      dateFormat={'dd/MM/yyyy'}
+      required
       />
+     
 
       <label htmlFor="startDate">Start Date</label>
-      <input
-        type="date"
-        id="startDate"
-        value={formData.startDate}
-        onChange={handleChange}
-        
+      <DatePicker 
+      id="startDate"
+      selected={formData.startDate}
+      onSelect={(value) => handleChange({target: {id: 'startDate', value}})}
+      onChange={(value) => handleChange({target: {id: 'startDate', value}})}
+      locale={fr}
+      dateFormat={'dd/MM/yyyy'}
+      required
       />
 
       <fieldset className="address">
@@ -103,7 +115,7 @@ const Form = () => {
           type="text"
           value={formData.street}
           onChange={handleChange}
-          
+          required
         />
 
         <label htmlFor="city">City</label>
@@ -112,7 +124,7 @@ const Form = () => {
           type="text"
           value={formData.city}
           onChange={handleChange}
-          
+          required
         />
 
         <label htmlFor="state">State</label>
@@ -121,6 +133,7 @@ const Form = () => {
                     onChange={handleStateSelect}
                     defaultValue={selectedState}
                     placeholder="Select states"
+                    required
                   />
         
 
@@ -130,7 +143,7 @@ const Form = () => {
           id="zipCode"
           value={formData.zipCode}
           onChange={handleChange}
-          
+          required
         />
       </fieldset>
 
@@ -145,6 +158,7 @@ const Form = () => {
             onChange={handleDepartmentSelect}
             defaultValue={selectedDepartment}
             placeholder="Select Department"
+            required
           />
 
     <button type="submit">Save</button>
