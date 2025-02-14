@@ -3,12 +3,16 @@ import { EmployeesContext } from "../../context";
 import { Select } from "hrnet-select-p14";
 import { states } from "../../data";
 
+import Modal from "../modal/Modal";
+import { createPortal } from "react-dom";
+
 
 const Form = () => {
  
   const { employees, setEmployees } = useContext(EmployeesContext);
   const [selectedDepartment, setSelectedDepartment] = useState(null)
   const [selectedState, setSelectedState] = useState(null)
+  const [showModal, setShowModal] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -27,11 +31,7 @@ const Form = () => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
-  const handleDepartmentSelect = (department) => {
-    setFormData({ ...formData, department }); //met à jour l'état sélectionné dans formData
-    setSelectedDepartment(department)
-  };
-
+ 
   // Gestion du submit du formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,13 +39,25 @@ const Form = () => {
 
     setEmployees(newEmployeesData);
     localStorage.setItem("employeesData", JSON.stringify(newEmployeesData)); 
-  };
-  const handleStateSelect = (state) => {
-    setFormData({ ...formData, state }); //met à jour l'état sélectionné dans formData
-    setSelectedState(state)
+    console.log(formData);
   };
 
+  // Gestion du select des états & départements 
+  const handleStateSelect = (state) => {
+    setFormData({ ...formData, state }); 
+   
+    setSelectedState(state)
+  };
+  const handleDepartmentSelect = (department) => {
+    setFormData({ ...formData, department }); 
+    setSelectedDepartment(department)
+  };
+
+  
+
   return (
+    <>
+
     <form id="create-employee" onSubmit={handleSubmit}>
       <label htmlFor="firstName">First Name</label>
       <input
@@ -103,13 +115,13 @@ const Form = () => {
           required
         />
 
-<label htmlFor="state">State</label>
-          <Select 
-            options={states}
-            onChange={handleStateSelect}
-            defaultValue={selectedState}
-            placeholder="Select states"
-          />
+        <label htmlFor="state">State</label>
+                  <Select 
+                    options={states}
+                    onChange={handleStateSelect}
+                    defaultValue={selectedState}
+                    placeholder="Select states"
+                  />
         
 
         <label htmlFor="zipCode">Zip Code</label>
@@ -135,8 +147,10 @@ const Form = () => {
             placeholder="Select Department"
           />
 
-      <button type="submit">Save Employee</button>
+      <button type="submit">Save </button>
+      {(showModal ) ? createPortal(<Modal handleCloseClick={() => setShowModal(false)} />, document.body) : ''}
     </form>
+    </>
   );
 };
 
