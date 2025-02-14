@@ -40,6 +40,7 @@ const Form = () => {
     setEmployees(newEmployeesData);
     localStorage.setItem("employeesData", JSON.stringify(newEmployeesData)); 
     console.log(formData);
+    setShowModal(true)
   };
 
   // Gestion du select des états & départements 
@@ -65,7 +66,6 @@ const Form = () => {
         id="firstName"
         value={formData.firstName}
         onChange={handleChange}
-        required
       />
 
       <label htmlFor="lastName">Last Name</label>
@@ -74,7 +74,7 @@ const Form = () => {
         id="lastName"
         value={formData.lastName}
         onChange={handleChange}
-        required
+        
       />
 
       <label htmlFor="dateOfBirth">Date of Birth</label>
@@ -83,7 +83,7 @@ const Form = () => {
         id="dateOfBirth"
         value={formData.dateOfBirth}
         onChange={handleChange}
-        required
+       
       />
 
       <label htmlFor="startDate">Start Date</label>
@@ -92,7 +92,7 @@ const Form = () => {
         id="startDate"
         value={formData.startDate}
         onChange={handleChange}
-        required
+        
       />
 
       <fieldset className="address">
@@ -103,7 +103,7 @@ const Form = () => {
           type="text"
           value={formData.street}
           onChange={handleChange}
-          required
+          
         />
 
         <label htmlFor="city">City</label>
@@ -112,7 +112,7 @@ const Form = () => {
           type="text"
           value={formData.city}
           onChange={handleChange}
-          required
+          
         />
 
         <label htmlFor="state">State</label>
@@ -130,7 +130,7 @@ const Form = () => {
           id="zipCode"
           value={formData.zipCode}
           onChange={handleChange}
-          required
+          
         />
       </fieldset>
 
@@ -147,8 +147,8 @@ const Form = () => {
             placeholder="Select Department"
           />
 
-      <button type="submit">Save </button>
-      {(showModal ) ? createPortal(<Modal handleCloseClick={() => setShowModal(false)} />, document.body) : ''}
+    <button type="submit">Save</button>
+    {(showModal) ? createPortal(<Modal handleCloseClick={() => setShowModal(false)}/>, document.body) : ''}
     </form>
     </>
   );
