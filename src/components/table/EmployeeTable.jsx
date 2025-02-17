@@ -28,44 +28,68 @@ const EmployeeTable = () => {
     //etat de la recherche
     const [globalFilter, setGlobalFilter] = useState("")
 
+    const [sorting, setSorting] = useState([
+        {
+            id: 'firstName',
+        },
+        {
+            id: 'lastName',
+        }
+    ])
+
     // Créer les colonnes
     const columnHelper = createColumnHelper();
     const columns = [
         columnHelper.accessor("firstName", {
             header: "First Name",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
+            enableSortingRemoval: false
         }),
         columnHelper.accessor("lastName", {
             header: "Last Name",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
+            enableSortingRemoval: false
         }),
         columnHelper.accessor("dateOfBirth", {
             header: "Date of Birth",
-            cell: (info) => info.getValue(),
+            cell: (info) => {                
+                return new Intl.DateTimeFormat('fr-FR').format(new Date(info.getValue()))
+            },
+            sortingFn: 'datetime',
         }),
         columnHelper.accessor("startDate", {
             header: "Start Date",
-            cell: (info) => info.getValue(),
+            cell: (info) => {
+                return new Intl.DateTimeFormat('fr-FR').format(new Date(info.getValue()))
+            },
+            sortingFn: 'datetime',
         }),
         columnHelper.accessor("street", {
             header: "Street",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor("city", {
             header: "City",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor("state", {
             header: "State",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor("zipCode", {
             header: "Zip Code",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor("department", {
             header: "Department",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
     ];
     
@@ -83,8 +107,11 @@ const EmployeeTable = () => {
         state: {
             pagination,
             globalFilter,
+            sorting,
         },
         onGlobalFilterChange: setGlobalFilter,
+        onSortingChange: setSorting,
+        enableSortingRemoval: false
     })
     
     const totalPages = table.getPageCount();
@@ -116,13 +143,35 @@ const EmployeeTable = () => {
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <th key={header.id}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(header.column.columnDef.header, header.getContext())}
-                                </th>
-                            ))}
+                            {headerGroup.headers.map((header) => { 
+                                return <th key={header.id}>
+                                {header.isPlaceholder ? null : (
+                                  <div
+                                    className={
+                                      header.column.getCanSort()
+                                        ? 'cursor-pointer select-none'
+                                        : ''
+                                    }
+                                    onClick={header.column.getToggleSortingHandler()}
+                                    title={
+                                        <>
+                                            {header.column.getNextSortingOrder()}
+                                            {header.column.getNextSortingOrder() === 'asc' ? 'Sort ascending' : 'Sort descending'}
+                                        </>                                      
+                                    }
+                                  >
+                                    {flexRender(
+                                      header.column.columnDef.header,
+                                      header.getContext()
+                                    )}
+                                    {{
+                                      asc: ' 🔼',
+                                      desc: ' 🔽',
+                                    }[header.column.getIsSorted()] ?? ' 🔼'}
+                                  </div>
+                                )}
+                              </th>                              
+                            })}
                         </tr>
                     ))}
                 </thead>

@@ -22,8 +22,8 @@ const Form = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    dateOfBirth: "",
-    startDate: "",
+    dateOfBirth: new Date(),
+    startDate: new Date(),
     street: "",
     city: "",
     state: "",
@@ -44,7 +44,6 @@ const Form = () => {
 
     setEmployees(newEmployeesData);
     localStorage.setItem("employeesData", JSON.stringify(newEmployeesData)); 
-    console.log(formData);
     setShowModal(true)
   };
 
@@ -88,8 +87,8 @@ const Form = () => {
       <DatePicker
       id="dateOfBirth"
       selected={formData.dateOfBirth}
-      onSelect={(value) => handleChange({target: {id: 'dateOfBirth', value}})}
-      onChange={(value) => handleChange({target: {id: 'dateOfBirth', value}})}
+      onSelect={(value) => handleChange({target: {id: 'dateOfBirth', value }})}
+      onChange={(value) => handleChange({target: {id: 'dateOfBirth', value }})}
       locale={fr}
       dateFormat={'dd/MM/yyyy'}
       required
@@ -101,7 +100,7 @@ const Form = () => {
       id="startDate"
       selected={formData.startDate}
       onSelect={(value) => handleChange({target: {id: 'startDate', value}})}
-      onChange={(value) => handleChange({target: {id: 'startDate', value}})}
+      onChange={(value) => handleChange({target: {id: 'startDate', value }})}
       locale={fr}
       dateFormat={'dd/MM/yyyy'}
       required
