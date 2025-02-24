@@ -94,3 +94,15 @@ table tr:hover {
   border-bottom-color: black;
   border-top-color: black;
 }
+
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.py-4 {
+  padding: 16px 0;
+}

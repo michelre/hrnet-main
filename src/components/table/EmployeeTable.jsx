@@ -196,7 +196,7 @@ const EmployeeTable = () => {
                 </tfoot>
             </table>
             {/* PAGINATION */}
-            <div className="flex items-center gap-2">
+            <div className="flex justify-between items-center gap-2 py-4">
 
 
                 <span className="flex items-center gap-1">
