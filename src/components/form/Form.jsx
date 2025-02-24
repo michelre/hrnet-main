@@ -22,8 +22,8 @@ const Form = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    dateOfBirth: "",
-    startDate: "",
+    dateOfBirth: new Date(),
+    startDate: new Date(),
     street: "",
     city: "",
     state: "",

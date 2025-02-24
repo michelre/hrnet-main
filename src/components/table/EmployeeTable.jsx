@@ -7,7 +7,7 @@ import {
     useReactTable,
     getPaginationRowModel,
     getSortedRowModel,
-    getFilteredRowModel, 
+    getFilteredRowModel,
 } from "@tanstack/react-table";
 
 import "./table.css";
@@ -20,13 +20,21 @@ const EmployeeTable = () => {
     // Vérifier si employees existe
     const isEmpty = !employees || employees.length === 0;
 
-  //etat de pagination
+    //etat de pagination
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 10,
     })
     //etat de la recherche
     const [globalFilter, setGlobalFilter] = useState("")
+    const [sorting, setSorting] = useState([
+        {
+            id: 'firstName',
+        },
+        {
+            id: 'lastName',
+        }
+    ])
 
     // Créer les colonnes
     const columnHelper = createColumnHelper();
@@ -34,41 +42,58 @@ const EmployeeTable = () => {
         columnHelper.accessor("firstName", {
             header: "First Name",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
+            enableSortingRemoval: false
         }),
         columnHelper.accessor("lastName", {
             header: "Last Name",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
+            enableSortingRemoval: false
         }),
         columnHelper.accessor("dateOfBirth", {
             header: "Date of Birth",
-            cell: (info) => info.getValue(),
+            cell: (info) => {
+                return new Intl.DateTimeFormat('fr-FR').format(new Date(info.getValue()))
+            },
+            sortingFn: 'datetime',
+
         }),
         columnHelper.accessor("startDate", {
             header: "Start Date",
-            cell: (info) => info.getValue(),
+            cell: (info) => {
+                return new Intl.DateTimeFormat('fr-FR').format(new Date(info.getValue()))
+            },
+            sortingFn: 'datetime',
+
         }),
         columnHelper.accessor("street", {
             header: "Street",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor("city", {
             header: "City",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor("state", {
             header: "State",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor("zipCode", {
             header: "Zip Code",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
         columnHelper.accessor("department", {
             header: "Department",
             cell: (info) => info.getValue(),
+            sortingFn: 'alphanumeric',
         }),
     ];
-    
+
     // Créer le tableau
     const table = useReactTable({
         data: employees || [],
@@ -79,28 +104,26 @@ const EmployeeTable = () => {
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         onPaginationChange: setPagination,
-        globalFilterFn: "includesString", 
+        globalFilterFn: "includesString",
         state: {
             pagination,
             globalFilter,
+            sorting,
         },
         onGlobalFilterChange: setGlobalFilter,
+        onSortingChange: setSorting,
+        enableSortingRemoval: false
     })
-    
-    const totalPages = table.getPageCount();
 
+    const totalPages = table.getPageCount();
 
     return (
         <div className="p-2">
             {isEmpty && <div className="text-center">Aucun employé trouvé!</div>}
-            <div>
-                <input
-                    value={globalFilter}
-                    onChange={(e) => setGlobalFilter(e.target.value)}
-                    placeholder="Search..."
-                />
-            </div>
-            <select
+         <div className="containerFilter">
+            <div className="containerSelect">
+                <span>Show</span>
+                <select
                 value={table.getState().pagination.pageSize}
                 onChange={(e) => {
                     table.setPageSize(Number(e.target.value));
@@ -108,24 +131,45 @@ const EmployeeTable = () => {
             >
                 {[10, 25, 50, 100].map((pageSize) => (
                     <option key={pageSize} value={pageSize}>
-                        Show {pageSize}
+                        {pageSize}
                     </option>
                 ))}
             </select>
+            <span>entries</span>
+            </div>
+         
+            <div className="containerSearch">
+                <span>Search: </span>
+                <input
+                    value={globalFilter}
+                    onChange={(e) => setGlobalFilter(e.target.value)}
+                />
+            </div>
+            </div> 
+           
             <table>
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <th key={header.id}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(header.column.columnDef.header, header.getContext())}
-                                </th>
-                            ))}
+                            {headerGroup.headers.map((header) => {
+                                return (
+                                    <th key={header.id} onClick={header.column.getToggleSortingHandler()} className="sortable">
+                                        {header.isPlaceholder ? null : (
+                                            <div className="th-content">
+                                                {flexRender(header.column.columnDef.header, header.getContext())}
+                                                <span className="sort-icons">
+                                                    <span className={`triangle up ${header.column.getIsSorted() === "asc" ? "active" : ""}`}></span>
+                                                    <span className={`triangle down ${header.column.getIsSorted() === "desc" ? "active" : ""}`}></span>
+                                                </span>
+                                            </div>
+                                        )}
+                                    </th>
+                                );
+                            })}
                         </tr>
                     ))}
                 </thead>
+
                 <tbody>
                     {table.getRowModel().rows.map((row) => (
                         <tr key={row.id}>
@@ -164,7 +208,7 @@ const EmployeeTable = () => {
                 </span>
                 <span className="flex items-center gap-1">
                     <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-                         Previous
+                        Previous
                     </button>
 
                     {/* Affichage dynamique des numéros de pages */}
@@ -179,7 +223,7 @@ const EmployeeTable = () => {
                     ))}
 
                     <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-                        Next 
+                        Next
                     </button>
 
                 </span>
